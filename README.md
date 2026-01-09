@@ -62,23 +62,34 @@ Windows uygulamaları, medya kontrolleri veya yürütülebilir dosyalar ile eşl
 
 ---
 
-### 🔧 Adım Adım Kurulum
+\### 🔧 Adım Adım Kurulum
 
-#### 1️⃣ Python Paketlerini Kur
-```bash
+\#### 1️⃣ Python Paketlerini Kur
+
+\`\`\`bash
+
 pip install PyQt6 pynput pillow pystray
+
 2️⃣ DLL Dosyasını Hazırla
-klvye123_dll.cpp dosyasını derleyerek klavye.dll oluşturun
+
+klvye123\_dll.cpp dosyasını derleyerek klavye.dll oluşturun
+
 veya
 
 Hazır klavye.dll dosyasını proje dizinine kopyalayın
 
 3️⃣ Uygulamayı Çalıştır
+
 bash
+
 Kodu kopyala
+
 python keymapper.py
+
 🖥️ Arayüz Kullanımı
+
 Sol Panel – Ayarlar
+
 Tetikleyici Tuş
 
 “Tuş Yakalamayı Başlat” butonu ile klavye/fare tuşu seçilir
@@ -98,6 +109,7 @@ Eşlemeyi Sisteme Ekle
 Ayar kaydedilir
 
 Sağ Panel – Aktif Atamalar
+
 Tüm aktif tuş eşlemeleri listelenir
 
 Bir eşlemeyi silmek için çift tıklayın
@@ -105,36 +117,46 @@ Bir eşlemeyi silmek için çift tıklayın
 Tümünü Sil ile bütün atamalar temizlenir
 
 🔧 Teknik Detaylar
+
 DLL Yapısı
+
 cpp
+
 Kodu kopyala
+
 // Ana fonksiyonlar
-Initialize(KeyCallback cb);  // Callback fonksiyonunu ayarlar
-StartListener();             // Tuş dinleyiciyi başlatır
-StopListener();              // Tuş dinleyiciyi durdurur
+
+Initialize(KeyCallback cb); // Callback fonksiyonunu ayarlar
+
+StartListener(); // Tuş dinleyiciyi başlatır
+
+StopListener(); // Tuş dinleyiciyi durdurur
+
 Tuş Tanımlama Sistemi
+
 HID Klavyeler
 
-vid_XXXX&pid_YYYY
+vid\_XXXX&pid\_YYYY
 
 ACPI Klavyeler
 
-ACPI_DEVICE_XXXX (hash)
+ACPI\_DEVICE\_XXXX (hash)
 
 Fare Olayları
 
-Mouse_Left
+Mouse\_Left
 
-Mouse_Right
+Mouse\_Right
 
-Mouse_Middle
+Mouse\_Middle
 
-Mouse_Wheel_Up
+Mouse\_Wheel\_Up
 
-Mouse_Wheel_Down
+Mouse\_Wheel\_Down
 
 💾 Veri Depolama
-Tüm ayarlar keymap_gui.json dosyasında saklanır
+
+Tüm ayarlar keymap\_gui.json dosyasında saklanır
 
 JSON içeriği:
 
@@ -145,21 +167,37 @@ Tuş kodu
 Hedef eylem (uygulama / dosya / medya)
 
 ⚙️ Yapılandırma
+
 Debounce Süreleri
+
 python
+
 Kodu kopyala
-DEBOUNCE_SEC = 0.4     # Normal tuşlar
-MOUSE_WHEEL_SEC = 0.12  # Fare tekerleği
+
+DEBOUNCE\_SEC = 0.4 # Normal tuşlar
+
+MOUSE\_WHEEL\_SEC = 0.12 # Fare tekerleği
+
 Medya Tuş Kodları
+
 python
+
 Kodu kopyala
-VK_VOLUME_UP = 0xAF
-VK_VOLUME_DOWN = 0xAE
-VK_VOLUME_MUTE = 0xAD
-VK_MEDIA_PLAY_PAUSE = 0xB3
-VK_MEDIA_NEXT_TRACK = 0xB0
-VK_MEDIA_PREV_TRACK = 0xB1
+
+VK\_VOLUME\_UP = 0xAF
+
+VK\_VOLUME\_DOWN = 0xAE
+
+VK\_VOLUME\_MUTE = 0xAD
+
+VK\_MEDIA\_PLAY\_PAUSE = 0xB3
+
+VK\_MEDIA\_NEXT\_TRACK = 0xB0
+
+VK\_MEDIA\_PREV\_TRACK = 0xB1
+
 📌 Notlar
+
 Uygulama sistem genelinde çalışır
 
 Yönetici izni gerekebilir
