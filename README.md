@@ -1,205 +1,60 @@
-# KeyMapper – Çoklu Klavye ve Fare Tuş Eşleme Aracı
+# Klavye & Fare Tuş Eşleştirici (KeyMapper)
 
-KeyMapper, birden fazla klavye ve fare cihazından gelen girdileri  
-Windows uygulamaları, medya kontrolleri veya yürütülebilir dosyalar ile eşleştirmenizi sağlayan modern ve kullanımı kolay bir tuş eşleme aracıdır.
+Klavyeden veya fareden herhangi bir tuş/fare hareketini yakalayıp  
+Windows uygulamalarını açabilen, medya tuşlarını simüle edebilen **hafif** bir araç.
 
----
+**Özellikler**
+- Birden fazla klavye/fare cihazını ayrı ayrı tanır  
+- Store uygulamaları + klasik .exe dosyaları + medya kontrolleri  
+- Sistem tepsisinde (tray) çalışır, arka planda kalır  
+- Debounce (çift basım önleme) özelliği  
+- Basit, modern, karanlık tema arayüzü
 
-## 🚀 Özellikler
 
-### ✅ Çoklu Klavye Desteği
-- Her klavye **benzersiz olarak tanımlanır**
-  - HID klavyeler: `VID/PID`
-  - ACPI klavyeler: `ACPI hash`
-- Aynı tuş, **farklı klavyelerde farklı işlemler** tetikleyebilir
-- Windows **Raw Input API** kullanır
-- Sistem genelinde **düşük gecikmeli** tuş yakalama
+## Nasıl Kullanılır?
 
----
+1. "TUŞ YAKALAMAYI BAŞLAT" butonuna basın
+2. Klavyeden veya fareden kullanmak istediğiniz tuşa basın
+3. Aşağıdaki 3 seçenekten birini seçin:
+   - Microsoft Store uygulaması
+   - Herhangi bir .exe dosyası
+   - Medya kontrolü (ses aç/kapa, sonraki/önceki, çalma/durdur)
+4. **EŞLEMEYİ SİSTEME EKLE** butonuna basın
 
-### 🖱️ Fare Desteği
-- Fare butonları:
-  - Sol Tuş
-  - Sağ Tuş
-  - Orta Tuş
-- Fare tekerleği:
-  - Yukarı
-  - Aşağı
-- **Debounce sistemi** ile yanlış tetiklemeler engellenir
+Artık seçtiğiniz tuşa her bastığınızda ilgili işlem gerçekleşecek.
+## DLL
+Normalde Windows, bilgisayara takılı 5 farklı klavye de olsa hepsini tek bir giriş gibi görür. Bu kodun asıl amacı, gelen tuş vuruşunun fiziksel olarak hangi cihazdan (VID/PID kimliğiyle) geldiğini tespit etmektir.
 
----
+Benzersiz Cihaz Kimliği (GetDeviceUniqueId): Kodun en büyük parçası, klavyenin donanım kimliğini (Vendor ID ve Product ID) okumaya ayrılmıştır. Bu sayede "Klavye A" ile "Klavye B" birbirinden ayırt edilebilir.
 
-### 🎯 Tetikleyici Seçenekleri
+JSON Veri Yapısı: Yakalanan tuş ve cihaz bilgisi, modern yazılımların (örneğin bir oyun motoru veya bir otomasyon aracı) kolayca okuyabileceği { "device": "...", "vkey": ... } formatına dönüştürülür.
 
-#### 🔑 Tuş Yakalama
-- Klavye veya fareden gelen herhangi bir tuş dinlenebilir
-- Cihaza özel tuş eşleme yapılabilir
+Arka Plan Dinleyicisi: Kod, kullanıcıyı engellemeden veya bilgisayarı yavaşlatmadan mesajları izleyen gizli bir pencere (HWND_MESSAGE) üzerinden çalışır.
 
-#### 🪟 Windows Uygulamaları
-- Başlat menüsündeki uygulamalar listelenir
-- Arama kutusu ile hızlı seçim yapılır
+Neden Bir Keylogger Değildir?
+Bu kod, kötü niyetli bir yazılımın sahip olması gereken karakteristik özelliklerin hiçbirini taşımamaktadır:
 
-#### 📁 Manuel Dosya Çalıştırma
-- `.exe` veya herhangi bir dosya seçilebilir
-- Seçilen dosya tetikleyici ile çalıştırılır
+Veri Depolama ve İletim Yok: Kodda yakalanan tuşları bir dosyaya kaydetme (log tutma) veya internet üzerinden uzak bir sunucuya gönderme fonksiyonu bulunmamaktadır. Veri sadece o an çalışan ana uygulamaya (callback aracılığıyla) anlık olarak iletilir.
 
-#### 🎵 Medya Kontrolleri
-- 🔊 Ses Aç (Volume Up)
-- 🔉 Ses Kıs (Volume Down)
-- 🔇 Sessiz (Mute)
-- ▶️ Oynat / ⏸️ Duraklat
-- ⏭️ Sonraki Parça
-- ⏮️ Önceki Parça
+Sistem Geneli Gizlilik Yok: Kod, kendini sistemden gizlemeye çalışmaz. Standart Windows API'lerini kullanır.
 
----
+Sınırlı Veri Takibi: Kod sadece tuşa basılma anını (keydown) yakalar. Şifre çalmak için gereken karmaşık mantık dizilerine (shift/alt kombinasyonları, büyük-küçük harf ayrımı vb.) sahip değildir.
 
-## 📦 Kurulum
+Kontrollü Çalışma: StartListener ve StopListener fonksiyonları ile sadece kullanıcı veya ana yazılım istediği zaman aktif olur.
 
-### Gereksinimler
-- Windows 10 / Windows 11
-- Python 3.8 veya üzeri
-- `klavye.dll` dosyası
+## Kısayollar & Medya Tuşları
 
----
+| Eylem               | Kısaltma   |
+|---------------------|------------|
+| Ses açma            | VOL_UP     |
+| Ses kısma           | VOL_DOWN   |
+| Sessize alma/açma   | MUTE       |
+| Çalma/Durdur        | PLAY_PAUSE |
+| Sonraki parça       | NEXT       |
+| Önceki parça        | PREV       |
 
-\### 🔧 Adım Adım Kurulum
+## Derleme (Kaynak Kodundan)
 
-\#### 1️⃣ Python Paketlerini Kur
-
-\`\`\`bash
-
-pip install PyQt6 pynput pillow pystray
-
-2️⃣ DLL Dosyasını Hazırla
-
-klvye123\_dll.cpp dosyasını derleyerek klavye.dll oluşturun
-
-veya
-
-Hazır klavye.dll dosyasını proje dizinine kopyalayın
-
-3️⃣ Uygulamayı Çalıştır
-
-bash
-
-Kodu kopyala
-
-python keymapper.py
-
-🖥️ Arayüz Kullanımı
-
-Sol Panel – Ayarlar
-
-Tetikleyici Tuş
-
-“Tuş Yakalamayı Başlat” butonu ile klavye/fare tuşu seçilir
-
-Windows Uygulaması Seç
-
-Arama yaparak uygulama bulunur
-
-Manuel Dosya / Medya
-
-.exe dosyası seçilebilir
-
-veya medya kontrolü atanabilir
-
-Eşlemeyi Sisteme Ekle
-
-Ayar kaydedilir
-
-Sağ Panel – Aktif Atamalar
-
-Tüm aktif tuş eşlemeleri listelenir
-
-Bir eşlemeyi silmek için çift tıklayın
-
-Tümünü Sil ile bütün atamalar temizlenir
-
-🔧 Teknik Detaylar
-
-DLL Yapısı
-
-cpp
-
-Kodu kopyala
-
-// Ana fonksiyonlar
-
-Initialize(KeyCallback cb); // Callback fonksiyonunu ayarlar
-
-StartListener(); // Tuş dinleyiciyi başlatır
-
-StopListener(); // Tuş dinleyiciyi durdurur
-
-Tuş Tanımlama Sistemi
-
-HID Klavyeler
-
-vid\_XXXX&pid\_YYYY
-
-ACPI Klavyeler
-
-ACPI\_DEVICE\_XXXX (hash)
-
-Fare Olayları
-
-Mouse\_Left
-
-Mouse\_Right
-
-Mouse\_Middle
-
-Mouse\_Wheel\_Up
-
-Mouse\_Wheel\_Down
-
-💾 Veri Depolama
-
-Tüm ayarlar keymap\_gui.json dosyasında saklanır
-
-JSON içeriği:
-
-Cihaz ID
-
-Tuş kodu
-
-Hedef eylem (uygulama / dosya / medya)
-
-⚙️ Yapılandırma
-
-Debounce Süreleri
-
-python
-
-Kodu kopyala
-
-DEBOUNCE\_SEC = 0.4 # Normal tuşlar
-
-MOUSE\_WHEEL\_SEC = 0.12 # Fare tekerleği
-
-Medya Tuş Kodları
-
-python
-
-Kodu kopyala
-
-VK\_VOLUME\_UP = 0xAF
-
-VK\_VOLUME\_DOWN = 0xAE
-
-VK\_VOLUME\_MUTE = 0xAD
-
-VK\_MEDIA\_PLAY\_PAUSE = 0xB3
-
-VK\_MEDIA\_NEXT\_TRACK = 0xB0
-
-VK\_MEDIA\_PREV\_TRACK = 0xB1
-
-📌 Notlar
-
-Uygulama sistem genelinde çalışır
-
-Yönetici izni gerekebilir
-
-DLL ve Python dosyaları aynı dizinde olmalıdır
+```bash
+# Gereksinimler
+pip install pyqt6 pynput pillow pystray
