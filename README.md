@@ -56,5 +56,8 @@ Kontrollü Çalışma: StartListener ve StopListener fonksiyonları ile sadece k
 ## Derleme (Kaynak Kodundan)
 
 ```bash
-# Gereksinimler
+
 pip install pyqt6 pynput pillow pystray
+```
+## Uygulama içi görüntüler
+<img width="1242" height="972" alt="Ekran görüntüsü 2026-01-12 145118" src="https://github.com/user-attachments/assets/041c17b1-d5c4-4e98-96e5-afbb85cc0a96" />
